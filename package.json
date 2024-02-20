@@ -1,0 +1,19 @@
+{
+  "name": "linuxacpipatch",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dsdtpre": "sh dump.sh && cp ./dump/dsdt.dat ./temp/dsdt.aml",
+    "latitude5540": "pnpm run dsdtpre && node ./patches/latitude5540.js ./temp/dsdt.aml && pnpm run dsdtpost",
+    "dsdtpost": "node revision.js ./temp/dsdt.aml --increase && node checksum.js ./temp/dsdt.aml --fix && sh install.sh ./temp/dsdt.aml"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^12.0.0"
+  }
+
+}
