@@ -1,6 +1,5 @@
 import { readFileSync, writeFileSync } from 'fs'
 import { program } from 'commander'
-import { setCharAt } from './helper.js'
 
 /**
  https://wiki.osdev.org/RSDT
@@ -17,7 +16,7 @@ import { setCharAt } from './helper.js'
   }; => 36
 **/
 
-const RevisionByte = 8
+const RevisionByte = 24
 
 program
 .argument('<file>', 'file to input')
@@ -30,13 +29,13 @@ const options = program.opts();
 
 const increase = options.increase ?? false;
 
-let binary = readFileSync(program.args[0], 'ascii')
+let binary = readFileSync(program.args[0], null)
 
-console.log(`revision is ${binary.charCodeAt(RevisionByte)}`)
+console.log(`revision is ${binary[RevisionByte]}`)
 
 if(increase) {   
-    binary = setCharAt(binary,RevisionByte, String.fromCharCode(binary.charCodeAt(RevisionByte)+1))
-    writeFileSync(program.args[0], binary, 'ascii')
-    console.log(`revision written, now ${binary.charCodeAt(RevisionByte)}`)
+    binary[RevisionByte] = binary[RevisionByte]+1
+    writeFileSync(program.args[0], binary, null)
+    console.log(`revision written, now ${binary[RevisionByte]}`)
 }
 

@@ -1,14 +1,32 @@
-import { patch } from '../helper.js'
+import { patch, indexOfMulti } from '../helper.js'
 
 function cb(binary) {
-    const c0 = String.fromCharCode(0)
-    const c1 = String.fromCharCode(1)
-    const c8 = String.fromCharCode(8)
+    const S = "S".charCodeAt()
+    const _ = "_".charCodeAt()
+
+    
+    const S1 = "1".charCodeAt()
+    const in1 = indexOfMulti(binary, [S,S,S1,_,0,8])
+    if(in1 > -1) {
+        console.log("disabled SS1 flag found, enable!")
+        binary[in1+4] = 1
+    }
+
+    const S2 = "2".charCodeAt()
+    const in2 = indexOfMulti(binary, [S,S,S2,_,0,8])
+    if(in2 > -1) {
+        console.log("disabled SS2 flag found, enable!")
+        binary[in2+4] = 1
+    }
+
+    const S3 = "3".charCodeAt()
+    const in3 = indexOfMulti(binary, [S,S,S3,_,0,8])
+    if(in3 > -1) {
+        console.log("disabled SS3 flag found, enable!")
+        binary[in3+4] = 1
+    }
 
     return binary
-        .replace("SS1_"+c0+c8, "SS1_"+c1+c8)
-        .replace("SS2_"+c0+c8, "SS2_"+c1+c8)
-        .replace("SS3_"+c0+c8, "SS3_"+c1+c8)
 }
 
 patch(cb)

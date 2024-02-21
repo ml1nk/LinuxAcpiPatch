@@ -29,13 +29,13 @@ const options = program.opts();
 
 const fix = options.fix ?? false;
 
-let binary = readFileSync(program.args[0], 'ascii')
+let binary = readFileSync(program.args[0], null)
 
 let checksum = 0
 let curChecksum = 0
 
 for(let i=0; i<binary.length; i++) {
-    const byte = binary.charCodeAt(i);
+    const byte = binary[i];
     if(i === ChecksumByte) {
         curChecksum = byte
     } else {
@@ -47,10 +47,10 @@ for(let i=0; i<binary.length; i++) {
 if((checksum + curChecksum) % 256 === 0) {
     console.log(`checksum ${checksum} + ${curChecksum} % 256 == 0, valid`)
 } else {
-    console.log(`checksum ${checksum} + ${curChecksum} % 256 != 0, invalid`)
+    console.log(`checksum ${checksum} + ${curChecksum} % 256 = ${(checksum+curChecksum)%256} != 0, invalid `)
     if(fix) {   
-        binary = setCharAt(binary, ChecksumByte, String.fromCharCode(256 - checksum % 256))
-        writeFileSync(program.args[0], binary, 'ascii')
+        binary[ChecksumByte] = 256 - checksum % 256
+        writeFileSync(program.args[0], binary, null)
         console.log("checksum written, fixed")
     }
 }
